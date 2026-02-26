@@ -16,5 +16,7 @@ jobs:
         run: script/bootstrap
       - name: test
         run: script/cibuild
+        env:
+          PAGES_REPO_NWO: ${{ github.repository }}
       - name: RuboCop
         run: bundle exec rubocop -D --config .rubocop.yml

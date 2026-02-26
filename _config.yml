@@ -1,0 +1,17 @@
+theme: jekyll-theme-primer
+title: Primer Theme Demo
+description: Demo site for jekyll-theme-primer
+
+exclude:
+  - node_modules
+  - script
+  - vendor/
+
+sass:
+  style: :compressed
+
+github:
+  private: false
+  license:
+    name: MIT
+  repository_url: "https://github.com/bagustris/primer2-theme"
