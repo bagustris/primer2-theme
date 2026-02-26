@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="{{ page.lang | default: site.lang | default: "en-US" }}">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+{% seo %}
+    <link rel="stylesheet" href="{{ "/assets/css/style.css?v=" | append: site.github.build_revision | relative_url }}">
+    {% include head-custom.html %}
+  </head>
+  <body>
+    <!-- Mobile menu toggle -->
+    <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle navigation">&#9776;</button>
+
+    <div class="book-layout">
+      <!-- ── Left sidebar ── -->
+      <nav class="book-sidebar" id="book-sidebar">
+        <div class="book-sidebar-header">
+          <a href="{{ "/" | absolute_url }}">{{ site.title | default: "Home" }}</a>
+        </div>
+
+        <!-- Search -->
+        <div class="sidebar-search">
+          <input type="text" id="search-input" placeholder="Search…" aria-label="Search" />
+          <div id="search-results" style="display: none;">
+            <div id="search-results-list"></div>
+          </div>
+        </div>
+
+        <!-- Page navigation -->
+        <div class="book-nav">
+          {% include sidebar-nav.html %}
+        </div>
+      </nav>
+
+      <!-- Mobile overlay backdrop -->
+      <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+      <!-- ── Main content ── -->
+      <main class="book-content">
+        <div class="book-content-inner markdown-body">
+          {{ content }}
+
+          {% if site.github.private != true and site.github.license %}
+          <div class="footer border-top border-gray-light mt-5 pt-3 text-right text-gray">
+            This site is open source. {% github_edit_link "Improve this page" %}.
+          </div>
+          {% endif %}
+        </div>
+      </main>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+
+    <!-- Lunr.js for search -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lunr.js/2.3.9/lunr.min.js" integrity="sha512-4xUl/d6D6THrAnXAwGajXkoWaeMNwEKK4iNfq5DotEbLPAfk6FSxSP3ydNxqDgCw1c/0Z1Jg6L8h2j+++9BZmg==" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Mobile sidebar toggle
+        var toggle = document.getElementById('sidebar-toggle');
+        var sidebar = document.getElementById('book-sidebar');
+        var overlay = document.getElementById('sidebar-overlay');
+
+        function closeSidebar() {
+          sidebar.classList.remove('is-open');
+          overlay.style.display = 'none';
+        }
+
+        toggle.addEventListener('click', function() {
+          var isOpen = sidebar.classList.toggle('is-open');
+          overlay.style.display = isOpen ? 'block' : 'none';
+        });
+
+        overlay.addEventListener('click', closeSidebar);
+
+        // Close sidebar when a nav link is clicked on mobile
+        sidebar.querySelectorAll('a').forEach(function(a) {
+          a.addEventListener('click', function() {
+            if (window.innerWidth <= 768) closeSidebar();
+          });
+        });
+
+        // Search
+        var searchInput = document.getElementById('search-input');
+        var searchResults = document.getElementById('search-results');
+        var searchResultsList = document.getElementById('search-results-list');
+        var searchIndex, searchData;
+
+        fetch('{{ "/assets/search.json" | relative_url }}')
+          .then(function(r) { return r.json(); })
+          .then(function(data) {
+            searchData = data;
+            searchIndex = lunr(function() {
+              this.ref('id');
+              this.field('title', { boost: 10 });
+              this.field('content');
+              this.field('excerpt');
+              this.field('categories');
+              this.field('tags');
+              data.forEach(function(doc, idx) {
+                doc.id = idx;
+                this.add(doc);
+              }, this);
+            });
+          })
+          .catch(function(e) { console.error('Search load error:', e); });
+
+        searchInput.addEventListener('input', function() {
+          var query = this.value.trim();
+          if (query.length < 2) { searchResults.style.display = 'none'; return; }
+          if (!searchIndex) {
+            searchResultsList.innerHTML = '<p>Loading…</p>';
+            searchResults.style.display = 'block';
+            return;
+          }
+          try {
+            displaySearchResults(searchIndex.search(query), query);
+          } catch(e) {
+            searchResultsList.innerHTML = '<p>Search error.</p>';
+            searchResults.style.display = 'block';
+          }
+        });
+
+        function displaySearchResults(results, query) {
+          if (results.length === 0) {
+            searchResultsList.innerHTML = '<p>No results for "' + query + '"</p>';
+          } else {
+            var html = '';
+            results.slice(0, 8).forEach(function(result) {
+              var item = searchData[result.ref];
+              html += '<div class="search-result-item mb-2 pb-2 border-bottom">';
+              html += '<h5><a href="' + item.url + '">' + item.title + '</a></h5>';
+              if (item.excerpt) html += '<p class="text-gray">' + item.excerpt + '</p>';
+              html += '</div>';
+            });
+            searchResultsList.innerHTML = html;
+          }
+          searchResults.style.display = 'block';
+        }
+
+        document.addEventListener('click', function(e) {
+          if (!searchResults.contains(e.target) && e.target !== searchInput) {
+            searchResults.style.display = 'none';
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
