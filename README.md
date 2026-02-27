@@ -1,8 +1,6 @@
 # primer2-theme
 
-A two-column GitBook-style Jekyll theme for GitHub Pages, based on GitHub's [Primer](https://primer.style/) design system.
-
-![Thumbnail](thumbnail.png)
+A two-column Jekyll theme for GitHub Pages, based on GitHub's [Primer](https://primer.style/) design system.
 
 ## Features
 
@@ -10,6 +8,8 @@ A two-column GitBook-style Jekyll theme for GitHub Pages, based on GitHub's [Pri
 - Client-side full-text search (Lunr.js) in the sidebar
 - Responsive — collapses to mobile-friendly single column with hamburger menu
 - Syntax highlighting via Rouge
+
+Documentation/demo: https://bagustri.github.io/primer2 
 
 ## Usage
 
@@ -67,4 +67,4 @@ script/cibuild     # run full test suite
 
 ## License
 
-MIT © GitHub, Inc.
+MIT
