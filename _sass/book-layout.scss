@@ -1,6 +1,6 @@
 // Two-column GitBook-style layout
 
-$mobile-header-height: 52px;
+$mobile-header-height: 52px !default;
 
 * { box-sizing: border-box; }
 
@@ -169,6 +169,8 @@ body { margin: 0; }
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  flex: 1 1 auto;
+  min-width: 0;
 
   &:hover { color: #0366d6; }
 }
@@ -183,6 +185,8 @@ body { margin: 0; }
 
 @media (max-width: 768px) {
   .mobile-header { display: flex; }
+
+  .book-sidebar-header { display: none; }
 
   .book-sidebar {
     transform: translateX(-100%);

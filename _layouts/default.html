@@ -12,15 +12,15 @@
   <body>
     <!-- Mobile header (hamburger + site title) -->
     <header class="mobile-header" role="banner">
-      <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle navigation">&#9776;</button>
-      <a class="mobile-site-title" href="{{ "/" | absolute_url }}">{{ site.title | default: "Home" }}</a>
+      <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle navigation" aria-controls="book-sidebar" aria-expanded="false">&#9776;</button>
+      <a class="mobile-site-title" href="{{ "/" | relative_url }}">{{ site.title | default: "Home" }}</a>
     </header>
 
     <div class="book-layout">
       <!-- ── Left sidebar ── -->
       <nav class="book-sidebar" id="book-sidebar">
         <div class="book-sidebar-header">
-          <a href="{{ "/" | absolute_url }}">{{ site.title | default: "Home" }}</a>
+          <a href="{{ "/" | relative_url }}">{{ site.title | default: "Home" }}</a>
         </div>
 
         <!-- Search -->
@@ -98,11 +98,13 @@
         function closeSidebar() {
           sidebar.classList.remove('is-open');
           overlay.style.display = 'none';
+          toggle.setAttribute('aria-expanded', 'false');
         }
 
         toggle.addEventListener('click', function() {
           var isOpen = sidebar.classList.toggle('is-open');
           overlay.style.display = isOpen ? 'block' : 'none';
+          toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
         });
 
         overlay.addEventListener('click', closeSidebar);
