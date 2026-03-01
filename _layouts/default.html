@@ -10,8 +10,11 @@
     {% include head-custom.html %}
   </head>
   <body>
-    <!-- Mobile menu toggle -->
-    <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle navigation">&#9776;</button>
+    <!-- Mobile header (hamburger + site title) -->
+    <header class="mobile-header" role="banner">
+      <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle navigation">&#9776;</button>
+      <a class="mobile-site-title" href="{{ "/" | absolute_url }}">{{ site.title | default: "Home" }}</a>
+    </header>
 
     <div class="book-layout">
       <!-- ── Left sidebar ── -->
