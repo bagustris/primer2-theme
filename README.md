@@ -31,15 +31,70 @@ remote_theme: bagustris/primer2-theme@v0.6.0
 
 ### Page navigation
 
-Pages with `layout: default` are automatically listed in the sidebar. Control the order with `order` front matter and exclude pages with `nav_exclude: true`:
+Pages with a layout (for example `page` or `default`) are automatically listed in the sidebar. Control the order with `order` front matter and exclude pages with `nav_exclude: true`:
 
 ```yaml
 ---
-layout: default
+layout: page
 title: My Page
 order: 1
 ---
 ```
+
+### Blog posts
+
+To publish posts automatically, create a blog index page and let the theme's `blog-list.html` include render `site.posts`.
+
+1. Add a blog page:
+
+   ```yaml
+   ---
+   layout: page
+   title: Blog
+   permalink: /blog/
+   order: 2
+   ---
+   ```
+
+   ```liquid
+   {% include blog-list.html %}
+   ```
+
+2. In your site's `_config.yml`, set post defaults so post URLs live under `/blog/`:
+
+   ```yaml
+   defaults:
+     - scope:
+         path: ""
+         type: posts
+       values:
+         layout: post
+         permalink: /blog/:title/
+   ```
+
+3. Create posts in `_posts/` using standard Jekyll filenames:
+
+   ```text
+   _posts/2026-05-08-my-first-post.md
+   _posts/2026-05-08-my-first-post.html
+   ```
+
+   Example Markdown post:
+
+   ```yaml
+   ---
+   layout: post
+   title: My First Post
+   description: Short summary for search engines and blog listings.
+   date: 2026-05-08 10:00:00 +0900
+   ---
+   ```
+
+   ```md
+   Write your post content here.
+   ```
+
+New posts are listed automatically on `/blog/`. If you prefer dated URLs instead of title-only URLs, change the permalink pattern, for example to `/blog/:year/:month/:day/:title/`.
 
 ### Stylesheet
 
