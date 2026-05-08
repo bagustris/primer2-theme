@@ -1,23 +1,29 @@
 {% comment %}
-  Display a list of blog posts from the blog collection.
-  Posts are automatically picked up from the _blog directory.
+  Display a list of blog posts from the /blogs directory.
+  Supports both .html and .md files.
 {% endcomment %}
 
 <div class="blog-list">
-  {% assign blog_posts = site.blog | sort: "date" | reverse %}
+  {% assign blog_files = site.static_files | where_exp: "f", "f.path contains '/blogs/'" %}
 
-  {% if blog_posts.size > 0 %}
-    <ul style="list-style: none; padding: 0;">
-      {% for post in blog_posts %}
+  <ul style="list-style: none; padding: 0;">
+    {% for file in blog_files %}
+      {% if file.extname == '.html' or file.extname == '.md' %}
+        {% assign file_name = file.name | split: "." | first | replace: "-", " " | replace: "_", " " %}
+        {% assign file_url = file.path %}
         <li style="margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid #e1e4e8;">
-          <a href="{{ post.url | relative_url }}" style="font-weight: 600; color: #0366d6; text-decoration: none;">{{ post.title | default: post.name }}</a>
+          <a href="{{ file_url | relative_url }}" style="font-weight: 600; color: #0366d6; text-decoration: none;">{{ file_name }}</a>
           <div style="font-size: 0.9em; color: #586069; margin-top: 0.3rem;">
-            <span>{{ post.date | date: "%B %d, %Y" }}</span>
+            {% if file.modified_time %}
+              <span>{{ file.modified_time | date: "%B %d, %Y" }}</span>
+            {% endif %}
           </div>
         </li>
-      {% endfor %}
-    </ul>
-  {% else %}
+      {% endif %}
+    {% endfor %}
+  </ul>
+
+  {% if blog_files.size == 0 %}
     <p>No blog posts yet.</p>
   {% endif %}
 </div>
