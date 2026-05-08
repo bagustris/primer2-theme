@@ -4,7 +4,8 @@
 {% endcomment %}
 
 <div class="blog-list">
-  {% assign blog_files = site.static_files | where_exp: "f", "f.path contains '/blogs/'" | where_exp: "f", "f.extname == '.html' or f.extname == '.md'" %}
+  {% assign blog_files = site.static_files | where_exp: "f", "f.path contains '/blogs/'" %}
+  {% assign blog_files = blog_files | where_exp: "f", "f.extname == '.html' or f.extname == '.md'" %}
 
   {% if blog_files.size > 0 %}
     <ul style="list-style: none; padding: 0;">
