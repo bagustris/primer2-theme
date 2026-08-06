@@ -33,16 +33,18 @@ The theme is structured as a standard Jekyll theme gem:
 
 - **`_layouts/`** — Four layouts: `default` (base), `home`, `page`, `post`. `home`, `page`, and `post` are thin wrappers that render `{{ content }}` inside `default`.
 - **`_layouts/default.html`** — The single master template. It includes the Primer CSS, injects `{% seo %}` (via `jekyll-seo-tag`), embeds inline search UI (Lunr.js), and includes `_includes/head-custom.html` for user overrides.
-- **`_sass/`** — Sass entry points only; no custom styles defined in the theme itself.
-  - `jekyll-theme-primer.scss` — Imports all primer npm packages in order: `primer-support`, `primer-base`, `primer-utilities`, `primer-layout`, `primer-markdown`, then `rouge` syntax highlighting.
+- **`_sass/`**
+  - `primer2-theme.scss` — The theme's Sass entry point. Imports all primer npm packages in order (`primer-support`, `primer-base`, `primer-utilities`, `primer-layout`, `primer-markdown`), then `rouge` and `book-layout`. Named `primer2-theme` (not `jekyll-theme-primer`) to avoid a Sass load-path collision with the upstream `jekyll-theme-primer` gem when this theme is consumed via `remote_theme`.
+  - `book-layout.scss` — Custom two-column sidebar/content layout styles (not part of upstream Primer).
   - `rouge.scss` — Syntax highlighting styles for Rouge code blocks.
+  - `primer.scss` — Legacy placeholder retained for backward compatibility; imports `primer2-theme`.
 - **`_includes/`** — Consumer-facing partials used by the sidebar and blog index:
   - `sidebar-nav.html` auto-lists `site.pages` entries that define a layout, ordered by `order` then `title`, and skips items with `nav_exclude: true`.
   - `blog-list.html` renders a blog index from `site.posts`.
   - `head-custom.html` and `head-custom-google-analytics.html` are override hooks for consumers.
-- **`assets/css/style.scss`** — Consumer-facing entry point that just imports `jekyll-theme-primer`. Consumer sites override styles by creating their own `/assets/css/style.scss` that imports this theme and adds custom rules after.
+- **`assets/css/style.scss`** — Consumer-facing entry point that just imports `primer2-theme`. Consumer sites override styles by creating their own `/assets/css/style.scss` that imports this theme (via `{{ site.theme }}`, which resolves to `primer2-theme` for `remote_theme` consumers) and adds custom rules after.
 - **`assets/search.json`** — Lunr.js search index data file served as JSON.
-- **`_config.yml`** — Theme's own demo site config; sets `theme: jekyll-theme-primer` and configures `search.enabled: true`.
+- **`_config.yml`** — Theme's own demo site config; sets `theme: jekyll-theme-primer` (gem-mode, used only for local development/preview of this repo — not the documented consumer install path, which is `remote_theme`).
 
 ## Key Conventions
 
@@ -51,7 +53,7 @@ The theme is structured as a standard Jekyll theme gem:
 - **Gem packaging**: `jekyll-theme-primer.gemspec` uses `git ls-files` to enumerate gem files — only files tracked by git in `assets/`, `_includes/`, `_layouts/`, `_sass/`, `LICENSE`, and `README` are packaged.
 - **Version bumping**: Version is defined only in `jekyll-theme-primer.gemspec`. Do not bump it in a PR; it is bumped prior to release and tagged.
 - **RuboCop config**: Inherits from `rubocop-github`'s default config via `inherit_gem`. `Layout/LineLength` is disabled. The `_site/` and `vendor/` dirs are excluded.
-- **Search**: Lunr.js client-side search is embedded directly in `_layouts/default.html` and loads `/assets/search.json` at runtime. The search page at `/search/` just focuses the persistent search input in the header.
+- **Search**: Lunr.js client-side search is embedded directly in `_layouts/default.html` and loads `/assets/search.json` at runtime. The search input lives in the persistent sidebar on every page — there is no separate `/search/` page.
 - **Blog setup**: Consumer sites should create a `/blog/` page that includes `blog-list.html`, then publish posts from `_posts/`. If the site wants all post URLs under `/blog/`, configure a `defaults` scope for `type: posts` with `permalink: /blog/:title/` or another preferred pattern.
 - **Jekyll plugins**: `jekyll-github-metadata` and `jekyll-seo-tag` are runtime dependencies — `site.github.*` variables and the `{% seo %}` tag are always available in layouts.
 - **One PR = one feature/fix**: Each pull request should address exactly one concern.
