@@ -12,7 +12,7 @@ if test -e "_sass/normalize.css/normalize.css"; then
   mv -f _sass/normalize.css/normalize.css _sass/normalize.css/normalize.scss
 fi
 
-# Add our own theme scss file for consistency of naming in `assets/style.scss`
+# Add our own theme scss file for consistency of naming in `assets/css/style.scss`
 content='
 @import "primer-support/index.scss";
 @import "primer-base/index.scss";
@@ -21,7 +21,7 @@ content='
 @import "primer-markdown/index.scss";
 @import "rouge";
 '
-echo "$content" >> _sass/jekyll-theme-primer.scss
+echo "$content" >> _sass/primer2-theme.scss
 
 # Create rouge stylesheet
 rougify style github > _sass/rouge.scss
