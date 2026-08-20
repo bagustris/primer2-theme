@@ -1,0 +1,73 @@
+// GitHub-style alert blockquotes: `> [!NOTE]`, `[!TIP]`, `[!IMPORTANT]`,
+// `[!WARNING]`, `[!CAUTION]`.
+//
+// kramdown (this theme's markdown renderer) has no notion of GitHub's alert
+// syntax -- it emits a plain <blockquote> whose first line is the literal
+// text "[!NOTE]". assets/js/markdown-alerts.js detects that marker at render
+// time, strips it, and applies the classes/icon this file styles.
+.markdown-alert {
+  padding: $spacer-3;
+  margin-bottom: $spacer-3;
+  color: $gray-900;
+  border-left: 0.25em solid $gray-300;
+
+  > :first-child {
+    margin-top: 0;
+  }
+
+  > :last-child {
+    margin-bottom: 0;
+  }
+
+  .markdown-alert-title {
+    display: flex;
+    align-items: center;
+    font-weight: $font-weight-bold;
+    margin-bottom: $spacer-2;
+
+    svg {
+      margin-right: $spacer-2;
+      fill: currentColor;
+    }
+  }
+
+  &.markdown-alert-note {
+    border-left-color: $blue-500;
+
+    .markdown-alert-title {
+      color: $blue-500;
+    }
+  }
+
+  &.markdown-alert-tip {
+    border-left-color: $green-600;
+
+    .markdown-alert-title {
+      color: $green-600;
+    }
+  }
+
+  &.markdown-alert-important {
+    border-left-color: $purple-500;
+
+    .markdown-alert-title {
+      color: $purple-500;
+    }
+  }
+
+  &.markdown-alert-warning {
+    border-left-color: $yellow-700;
+
+    .markdown-alert-title {
+      color: $yellow-800;
+    }
+  }
+
+  &.markdown-alert-caution {
+    border-left-color: $red-500;
+
+    .markdown-alert-title {
+      color: $red-500;
+    }
+  }
+}
