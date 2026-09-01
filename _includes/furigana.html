@@ -1,1 +1,24 @@
-<ruby>{{ include.text }}<rt>{{ include.reading }}</rt></ruby>
+{%- comment -%}
+Furigana (ruby) reading annotations.
+
+Sentence form — one call, any number of readings:
+  {% include furigana.html text="[今日|きょう]は[日本語|にほんご]です。" %}
+
+Single word form:
+  {% include furigana.html text="漢字" reading="かんじ" %}
+{%- endcomment -%}
+{%- assign fg_text = include.text | default: include.t -%}
+{%- if include.reading -%}
+<ruby>{{ fg_text }}<rt>{{ include.reading }}</rt></ruby>
+{%- else -%}
+{%- assign fg_chunks = fg_text | split: "[" -%}
+{%- for fg_chunk in fg_chunks -%}
+{%- if fg_chunk contains "]" -%}
+{%- assign fg_pair = fg_chunk | split: "]" -%}
+{%- assign fg_ruby = fg_pair[0] | split: "|" -%}
+<ruby>{{ fg_ruby[0] }}<rt>{{ fg_ruby[1] }}</rt></ruby>{{ fg_pair[1] }}
+{%- else -%}
+{{- fg_chunk -}}
+{%- endif -%}
+{%- endfor -%}
+{%- endif -%}
