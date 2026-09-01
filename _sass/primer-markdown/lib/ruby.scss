@@ -1,0 +1,14 @@
+// Furigana (ruby annotations) used as reading aids above CJK characters,
+// e.g. <ruby>漢字<rt>かんじ</rt></ruby>
+.markdown-body {
+  ruby {
+    ruby-align: center;
+  }
+
+  rt {
+    font-size: 0.6em;
+    font-weight: $font-weight-normal;
+    color: $gray-500;
+    user-select: none;
+  }
+}
